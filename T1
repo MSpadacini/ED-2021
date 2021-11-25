@@ -90,73 +90,6 @@ void insere_elemento_fila(Fila *fi){
 	getch();
 }
 
-/* função verifica os números que estão nas duas estruturas
-   cada elemento da pilha é comparado os todos elementos da fila verificando a igualdade*/
-void consulta_iguais(Pilha *pi, Fila *fi){
-    int achou;
-    aux = pi->topo;
-    /*looping da pilha*/
-    do{
-        achou = 0;
-        aux2 = fi->inicio;
-         /*looping da fila*/
-        do{
-            if(aux2->num == aux->num)
-                achou ++;
-            aux2 = aux2->prox;
-        } while(aux2 != NULL);
-
-        if(achou > 0)
-            printf(" %d", aux->num);
-        aux = aux->prox;
-    } while(aux != NULL);
-	getch();
-}
-
-/* função verifica os números que estão somente na pilha
-   cada elemento da pilha é comparado os todos elementos da fila*/
-void consulta_pilha(Pilha *pi, Fila *fi){
-    int achou;
-    aux = pi->topo;
-     /*looping da pilha*/
-    do{
-        achou = 0;
-        aux2 = fi->inicio;
-         /*looping da fila*/
-        do{
-            if(aux2->num == aux->num)
-                achou ++;
-            aux2 = aux2->prox;
-        } while(aux2 != NULL);
-        if(achou == 0)
-            printf(" %d", aux->num);
-        aux = aux->prox;
-    } while(aux != NULL);
-	getch();
-}
-
-/* função verifica os números que estão somente na fila
-   cada elemento da fila é comparado os todos elementos da pilha*/
-void consulta_fila(Pilha *pi, Fila *fi){
-    int achou;
-    aux2 = fi->inicio;
-    /*looping da fila*/
-    do{
-        achou = 0;
-        aux = pi->topo;
-        /*looping da pilha*/
-        do{
-            if(aux2->num == aux->num)
-                achou ++;
-            aux = aux->prox;
-        } while(aux != NULL);
-        if(achou == 0)
-            printf(" %d", aux2->num);
-        aux2 = aux2->prox;
-    } while(aux2 != NULL);
-	getch();
-}
-
 /*o elemento a ser removido será sempre o topo(último elemento inserido)*/
 void remove_elemento_pilha(Pilha *pi){
 	 if(pi->topo ==  NULL){
@@ -183,121 +116,50 @@ void remove_elemento_fila(Fila *fi){
 	getch();
 }
 
-/*a pilha será esvaziada e o espaço ocupado por ela será desalocado*/
-void esvazia_pilha(Pilha *pi){
-	if(pi->topo == NULL){
-		printf("\nPilha Vazia!!");
-	}else{
-		aux = pi->topo;
-		do{
-			pi->topo = pi->topo->prox;
-			free(aux);
-			aux = pi->topo;
-		}while(aux != NULL);
-		printf("\nPilha Esvaziada!!");
-	}
-	getch();
-}
-/*a fila será esvaziada e o espaço ocupado por ela será desalocado*/
-void esvazia_fila(Fila *fi){
-	if(fi->inicio == NULL){
-		printf("\nFila Vazia!!");
-	}else{
-		aux2 = fi->inicio;
-		do{
-			fi->inicio = fi->inicio->prox;
-			free(aux2);
-			aux2 = fi->inicio;
-		}while(aux2 != NULL);
-		printf("\nFila Esvaziada!!");
-	}
-	getch();
-}
-
-/*removi o original, alteração realizada a partir deste ponto*/
-
 int main(){
-    int N, K, I, contP, contF; 
-	int isFila = 0; // fila
-    int isPilha = 0; // pilha
-    int notDefinido = 0;
-    int isNotPilha = 0;
-    int isNotFila = 0;
-	int Topo;  
+	int i, j, N, K, I;
 	char C;
-
+	Pilha *pi = cria_pilha();
+	Fila *fi = cria_fila();
+	
+	printf("\nDigite o numero de caso de testes: "); //comentar esta linha para o makefile
 	scanf("%d", &N);
 	
-	contP = 0;
-
-
-	for (int i = 0; i < N; i++) { // indica valores entre 1 à 100
-        Pilha *pi = cria_pilha();
-		Fila *fi = cria_fila();
-
+	for(i = 1; i <= N; i++ ){
+		printf("\nDigite o numero de inserções/remoções: "); //comentar esta linha para o makefile
 		scanf("%d", &K);
-
-		for (int j = 0; j < K; j++) { // indica os valores do caso de teste entre 2 a 100
-			scanf(" %c %d", &C, &I);
-
-            if (C == 'i') {            	         	
-            	insere_elemento_pilha(pi);
-                insere_elemento_fila(fi);
-                system("CLS");
-                
-            } else if (C == 'r') {
-               	remove_elemento_pilha(pi);
-               	Topo = pi->topo;
-            	remove_elemento_fila(fi);
-            	system("CLS");
-            	
-                
-                if (pi.topo == I && isNotPilha != 1) { // pilha
-                    isPilha++;
-                } 
-                
-                if (filaRemovido.chave == I && isNotFila != 1) { // filha
-                    isFila++;
-                }
-
-                if (filaRemovido.chave == I && pilhaRemovido.chave == I) { // impossivel
-                    notDefinido++;
-                }
-
-                if (pilhaRemovido.chave != I) { // invalida pilha
-                    isNotPilha = 1;
-                }
-
-                if (filaRemovido.chave != I) { // invalida fila
-                    isNotFila = 1;
-                }
-            }
+		
+		for (int j = 0; j < K; j++) {
+			//scanf(" %c %d", &C, &I); //descomentar esta linha para makefile
+			printf("\nDigite se (i) para inserção ou (r) para remoção: "); //comentar esta linha para o makefile
+			scanf(" %c", &C); //comentar esta linha para o makefile
+			printf("\nDigite o valor para operação: "); //comentar esta linha para o makefile
+			scanf(" %d", &I); //comentar esta linha para o makefile
+			
+			if (C == 'i'){ //verificar a inserção neste ponto
+				insere_elemento_pilha(pi);
+                insere_elemento_fila(fi);			
+				
+			}else if (C == 'r') {
+				if ( Pilha.topo == I){
+					
+				}
+			
+			
+			
+			}
+			
+			
 		}
-        
-        // printf("isStack %d isQueue %d itemNotFoundQueue %d itemNotFoundStack %d isNotDefinedMoreOneTime %d\n", isStack, isQueue, itemNotFoundQueue, itemNotFoundStack, isNotDefinedMoreOneTime);
-        if (isPilha > isFila) {
-            if (isNotPilha == 1) {
-                printf("impossivel\n");   
-            } else {
-                printf("pilha\n");
-            }
-        } else if (isFila > isPilha) {
-            if (isNotFila == 1) {
-                printf("impossivel\n");   
-            } else {
-                printf("fila\n");
-            }
-        } else if (isFila == isPilha && (isNotFila > 0 || isNotPilha > 0)) {
-            printf("impossivel\n"); 
-        } else {
-            printf("indefinido\n");
-        }
-
-        isFila = 0;
-        isPilha = 0;
-        isNotPilha = 0;
-        isNotFila = 0;
+		
+		
 	}
-
-    return 0;
+	
+	
+	
+	
+	
+	
+	
+	
 }
