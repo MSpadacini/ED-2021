@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <conio.h>
+//#include <conio.h>
 
 /*registro que reprensentará cada elemento da pilha*/
 struct Elemento_pilha{
@@ -61,21 +61,21 @@ Fila* cria_fila(){
 void insere_elemento_pilha(Pilha *pi){
 	/*a cada inserção alocamos dinamicamente um espaço para um novo elemento*/
 	Elemento_pilha *novo =(Elemento_pilha*) malloc(sizeof(Elemento_pilha));
-	printf("\nDigite o numero a ser inserido na pilha: ");
-	scanf("%d",&novo->num);
+	printf("\nDigite o numero a ser inserido na pilha: "); // comentar
+	scanf("%d",&novo->num);//comentar
 	/*como o número inserido será o novo topo, ele apontará para o topo atual que será o segundo elemento da pilha*/
 	novo->prox = pi->topo;
 	/*topo aponta para o endereço de novo*/
 	pi->topo = novo;
-	printf("\nNumero inserido na pilha!\n");
-	getch();
+	printf("%d inserido na pilha!\n", pi->topo->num); //comentar
+	//getch();
 }
 
 void insere_elemento_fila(Fila *fi){
 	/*a cada inserção alocamos dinamicamente um espaço para um novo elemento*/
 	Elemento_fila *novo =(Elemento_fila*) malloc(sizeof(Elemento_fila));
-	printf("\nDigite o numero a ser inserido na fila: ");
-	scanf("%d",&novo->num);
+	printf("\nDigite o numero a ser inserido na fila: "); //comentar
+	scanf("%d",&novo->num);//comentar
 	novo->prox = NULL;
 	/*caso a fila esteja vazia, o elemento inserido será o primeiro e o último */
 	if(fi->inicio == NULL){
@@ -86,80 +86,123 @@ void insere_elemento_fila(Fila *fi){
 		fi->fim->prox = novo;
 		fi->fim = novo;
 	}
-	printf("\nNumero inserido na fila!\n");
-	getch();
+	printf("%d inserido na fila!\n", fi->fim->num); //comentar
+	//getch();
 }
 
 /*o elemento a ser removido será sempre o topo(último elemento inserido)*/
 void remove_elemento_pilha(Pilha *pi){
 	 if(pi->topo ==  NULL){
-		printf("\nPilha Vazia!!");
+		printf("\nPilha Vazia!!\n"); // comentar
 	} else{
 		aux = pi->topo;
-		printf("%d removido!", pi->topo->num);
+		printf("%d removido!\n", pi->topo->num); //comentar
 		pi->topo = pi->topo->prox;
 		free(aux);
 	}
-	getch();
+	//getch();
 }
 
 /*o elemento a ser removido será sempre o primeiro elemento inserido(inicio)*/
 void remove_elemento_fila(Fila *fi){
 	if(fi->inicio == NULL){
-		printf("\nFila Vazia!!");
+		printf("\nFila Vazia!!\n"); //comentar
 	} else{
 		aux2 = fi->inicio;
-		printf("%d removido!", fi->inicio->num);
+		printf("%d removido!\n", fi->inicio->num); //comentar
 		fi->inicio = fi->inicio->prox;
 		free(aux2);
 	}
-	getch();
+	//getch();
 }
 
 int main(){
 	int i, j, N, K, I;
+	int countp = 0; // pilha
+	int countf = 0; //fila
+	int isnotdefine = 0; //não definido
+	int notbelongstack = 0; //não pertence a pilha
+	int notbelongqueue = 0; //não pertence a fila
+	int P;
+	int F;
 	char C;
-	Pilha *pi = cria_pilha();
-	Fila *fi = cria_fila();
+
 	
 	printf("\nDigite o numero de caso de testes: "); //comentar esta linha para o makefile
 	scanf("%d", &N);
 	
 	for(i = 1; i <= N; i++ ){
+	    Pilha *pi = cria_pilha();
+	    Fila *fi = cria_fila();
+	    
 		printf("\nDigite o numero de inserções/remoções: "); //comentar esta linha para o makefile
 		scanf("%d", &K);
 		
 		for (int j = 0; j < K; j++) {
 			//scanf(" %c %d", &C, &I); //descomentar esta linha para makefile
 			printf("\nDigite se (i) para inserção ou (r) para remoção: "); //comentar esta linha para o makefile
-			scanf(" %c", &C); //comentar esta linha para o makefile
-			printf("\nDigite o valor para operação: "); //comentar esta linha para o makefile
-			scanf(" %d", &I); //comentar esta linha para o makefile
+			scanf(" %c", &C); 
 			
 			if (C == 'i'){ //verificar a inserção neste ponto
-				insere_elemento_pilha(pi);
-                insere_elemento_fila(fi);			
-				
+			    insere_elemento_pilha(pi);
+                insere_elemento_fila(fi);
+                
 			}else if (C == 'r') {
-				if ( Pilha.topo == I){
-					
-				}
-			
-			
-			
+			    printf("\nDigite o valor para operação de remoção: "); //comentar esta linha para o makefile
+			    scanf(" %d", &I); 
+			    P = pi->topo->num;
+			    printf("%d valor de P!\n", P); //comentar
+			    remove_elemento_pilha(pi);
+			    F = fi->inicio->num;
+			    printf("%d valor de F!\n", F); //comentar
+			    remove_elemento_fila(fi);
+			    
+			    if (P == I && notbelongstack != 1){
+			        countp++;
+			    }
+			    
+			    if (F == I && notbelongqueue != 1){
+			        countf++;
+			    }
+			    
+			    if (P == F){
+			        isnotdefine++;
+			    }
+			    
+			    if (P != I){ //nega pilha
+			        notbelongstack = 1;
+			    }
+			    
+			    if (F != I){ //nega Fila
+			        notbelongqueue = 1;
+			    }
 			}
-			
-			
 		}
 		
-		
+		// printf saidas
+        if (countp > countf) {
+            if (notbelongstack == 1) {
+                printf("impossivel\n");   
+            } else {
+                printf("pilha\n");
+            }
+        } else if (countf > countp) {
+            if (notbelongqueue == 1) {
+                printf("impossivel\n");   
+            } else {
+                printf("fila\n");
+            }
+        } else if (countp == countf && (notbelongstack > 0 || notbelongqueue > 0)) {
+            printf("impossivel\n"); 
+        } else {
+            printf("indefinido\n");
+        }
+
+        countp = 0;
+        countf = 0;
+        notbelongstack = 0;
+        notbelongqueue = 0;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
+	return 0;
 }
