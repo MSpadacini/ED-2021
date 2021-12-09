@@ -1,0 +1,175 @@
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, PHP, Ruby, 
+C#, VB, Perl, Swift, Prolog, Javascript, Pascal, HTML, CSS, JS
+Code, Compile, Run and Debug online from anywhere in world.
+
+Trabalho 02 - Adm Contatinhos
+
+*******************************************************************************/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <conio.h>
+#include <string.h>
+
+typedef struct contatinho
+{	char nome[9];
+	int fone;
+	struct contatinho *link;
+} contatinho;
+
+contatinho *root;
+contatinho *current;
+
+void AdicionarContatinho(char entrada[21])
+{
+	int i = 0;
+	int j = 2;
+	char nome[9];
+	char fone[8];
+	int telefone;
+	contatinho *novoContatinho;
+	for (i = 0; i < 9; i++)
+	{
+		nome[i] = entrada[j];
+		j++;
+	}
+	
+	i = 0;
+	j = 11;
+	
+	for (i = 0; i < 9; i++)
+	{
+		fone[i] = entrada[j];
+		j++;
+	}
+	
+	telefone = (int) fone;
+	strcpy(novoContatinho->nome, nome);
+	novoContatinho->fone = telefone;
+	
+	if (root == NULL)
+	{
+		current = root = novoContatinho;
+	}
+	else
+	{
+		current = current->link = novoContatinho;
+	}	
+}
+
+void RemoverContatinho(contatinho **root_ref, char nome[9])
+{
+	
+    contatinho* temp = *root_ref, *prev; 
+  
+     
+    if (temp != NULL && strcmp(temp->nome, nome)) 
+    { 
+        *root_ref = temp->link;    
+        free(temp);               
+    } 
+  
+    
+    while (temp != NULL && temp->nome != nome) 
+    { 
+        prev = temp; 
+        temp = temp->link; 
+    } 
+  
+    
+    if (temp == NULL) return; 
+  
+    
+    prev->link = temp->link; 
+  
+    free(temp); 
+}
+
+void PesquisarContatinho(char nome[10])
+{
+	contatinho *temp = malloc(sizeof(*temp));
+	temp->link = NULL;
+	if (root->link == NULL)
+	{
+		printf("Operacao invalida: contatinho nao encontrado \n");
+	}
+	else
+	{
+		temp->link = root->link;
+	}
+	
+	if(temp->link)
+	{
+		do
+		{
+			if(temp->nome == nome)
+			{
+				printf("Contatinho encontrado: telefone %d \n", temp->fone);
+				break;
+			}
+			else
+			{
+				temp = temp->link;
+			}
+		}
+		while(temp->link);
+	}
+}
+
+void AlterarContatinho(char entrada[21])
+{
+	
+}
+
+int main(void)
+{
+	root = malloc(sizeof(struct contatinho));
+	root->link = malloc(sizeof(struct contatinho));
+	root = NULL;
+	root->link = NULL;
+	char entrada[21];
+	
+	while (entrada[0] != "0")
+	{	
+		gets(entrada);
+		
+		if (entrada[0] == "I")
+		{
+			//Inserir contato
+			if (root == NULL)
+			{
+				AdicionarContatinho(entrada);
+			}
+		}
+		else if (entrada[0] == "P")
+		{
+			//Pesquisar contato
+			char nome[9];
+			int j = 2;
+			int i = 0;
+			for (i = 0; i < 9; i++)
+			{
+				nome[i] = entrada[j];
+				j++;
+			}
+			PesquisarContatinho(nome);
+		}
+		else if (entrada[0] == "R")
+		{
+			//Remover contato
+		}
+		else if (entrada[0] == "A")
+		{
+			//Alterar contato
+		}
+		else if (entrada[0] == "0")
+		{
+			printf("Exit");
+		}
+	}
+
+	return 0;
+}
