@@ -12,10 +12,10 @@ struct Pessoa{
 
 void exibirMenu(){
     printf("\n\tSelecione umas das opções a seguir:\n");
-    printf("\tI - Inserir novo contato\n"
-           "\tP - Pesquisar por um contato\n"
-           "\tR - Remover um contato com 'nome'.\n"
-           "\tA - Alterar um contato\n"
+    printf("\t1 - Inserir novo contato\n"
+           "\t2 - Pesquisar por um contato\n"
+           "\t3 - Remover um contato com 'nome'.\n"
+           "\t4 - Alterar um contato\n"
            "\t0 - Sair\n\n");
 }
 
@@ -39,19 +39,21 @@ void cadastrarContato(int registro, char* nomeBuscado){
     pessoa[registro].nome = alocarMemoria(strlen(dados));
     strcpy(pessoa[registro].nome, dados);
 
-    //printf("\t\tTelefone: "); //COMENTAR NO RUN.CODES
+    printf("\t\tTelefone: ");
     scanf("%s", pessoa[registro].telefone);
     setbuf(stdin, NULL);
 }
 
 void exibirContato(int indice){
-    //printf("\tIndice encontrado: %d\n", indice); //COMENTAR NO RUN.CODES
+    //printf("\n\tNome: %s\n", pessoa[indice].nome);
+    printf("\tIndice encontrado: %d\n", indice);
     printf("\tContatinho encontrado: telefone %s\n", pessoa[indice].telefone);
 }
 
 void removerContato(int indice){
+ //teste de remoção
     int i;
-    //printf("\tIndice encontrado: %d\n", indice); //COMENTAR NO RUN.CODES
+    printf("\tIndice encontrado: %d\n", indice);
     for(i = indice; i < MAX; i++){
         pessoa[i] = pessoa[i+1];
     }
@@ -72,22 +74,26 @@ void atualizarContato(int indice){
     char* nome;
     char fone[16];
     char dados[MAX];
+    //printf("\n\t\tNome: ");
+    //scanf("%[^\n]s", dados);
     setbuf(stdin, NULL);
     
     
     //Alocação e cópia de dados
     nome = alocarMemoria(strlen(dados));
     strcpy(nome, dados);
-    //printf("\tTelefone: "); //COMENTAR NO RUN.CODES
+    printf("\tTelefone: ");
     scanf("%s", fone);
     setbuf(stdin, NULL);
+    //pessoa[indice].nome = nome;
     strcpy(pessoa[indice].telefone, fone);
 
 }
-char leitor(){
-    char opcao;
-    //printf("\n\tOpção escolhida: "); //COMENTAR NO RUN.CODES
-    scanf("%s", &opcao);
+
+int leitor(){
+    int opcao;
+    printf("\n\tOpção escolhida: ");
+    scanf("%d", &opcao);
     setbuf(stdin, NULL);
     return opcao;
 }
@@ -95,17 +101,17 @@ char leitor(){
 int main(){
     char nome[MAX];
     int numeroRegistro = 0;
-    char opcaoEscolhida;
+    int opcaoEscolhida;
     char I, P, R, A;
     int indice;
 
     do{
-        //exibirMenu();
+        exibirMenu();
         opcaoEscolhida = leitor();
         
         switch(opcaoEscolhida){
-            case 'I': //INSERIR
-                //printf("\n\t\tNome: "); //COMENTAR NO RUN.CODES
+            case 1:
+                printf("\n\t\tNome: ");
                 scanf("%s", nome);
                 indice = pesquisarContato(numeroRegistro, nome);
                 
@@ -115,8 +121,8 @@ int main(){
                     cadastrarContato(numeroRegistro++, nome);
                 break;
                 
-            case 'P': //PESQUISAR
-                //printf("\n\tNome: "); //COMENTAR NO RUN.CODES
+            case 2:
+                printf("\n\tNome: ");
                 scanf("%s", nome);
                 indice = pesquisarContato(numeroRegistro, nome);
 
@@ -126,8 +132,9 @@ int main(){
                     printf("\n\tContatinho nao encontrado\n");
                 break;
             
-            case 'R': //REMOVER
-                //printf("\n\tNome: "); //COMENTAR NO RUN.CODES
+            case 3: 
+                // remover
+                printf("\n\tNome: ");
                 scanf("%s", nome);
                 indice = pesquisarContato(numeroRegistro--, nome);
                 
@@ -137,8 +144,8 @@ int main(){
                     printf("\n\tOperacao invalida: contatinho nao encontrado\n");
                 break;
                
-            case 'A': //ALTERAR
-                //printf("\n\tNome: "); //COMENTAR NO RUN.CODES
+            case 4:
+                printf("\n\tNome: ");
                 scanf("%s", nome);
                 indice = pesquisarContato(numeroRegistro, nome);
                 
@@ -148,15 +155,14 @@ int main(){
                     printf("\n\tOperacao invalida: contatinho nao encontrado\n");
                 break;
                 
-            case '0': //SAIR
-                //printf("\n\tSaindo..."); //COMENTAR NO RUN.CODES
+            case 0:
+                printf("\n\tSaindo...");
                 break;
             default:
-                //printf("Opção inválida!\n"); //COMENTAR NO RUN.CODES
-                //exibirMenu();
+                printf("Opção inválida!\n");
+                exibirMenu();
                 opcaoEscolhida = leitor();
         }
 
-    }while(opcaoEscolhida != '0');
+    }while(opcaoEscolhida != 0);
 }
-
