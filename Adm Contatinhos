@@ -1,175 +1,162 @@
-/******************************************************************************
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
 
-Welcome to GDB Online.
-GDB online is an online compiler and debugger tool for C, C++, Python, PHP, Ruby, 
-C#, VB, Perl, Swift, Prolog, Javascript, Pascal, HTML, CSS, JS
-Code, Compile, Run and Debug online from anywhere in world.
+#define MAX 100
 
-Trabalho 02 - Adm Contatinhos
-
-*******************************************************************************/
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <conio.h>
-#include <string.h>
-
-typedef struct contatinho
-{	char nome[9];
-	int fone;
-	struct contatinho *link;
-} contatinho;
-
-contatinho *root;
-contatinho *current;
-
-void AdicionarContatinho(char entrada[21])
-{
-	int i = 0;
-	int j = 2;
-	char nome[9];
-	char fone[8];
-	int telefone;
-	contatinho *novoContatinho;
-	for (i = 0; i < 9; i++)
-	{
-		nome[i] = entrada[j];
-		j++;
-	}
-	
-	i = 0;
-	j = 11;
-	
-	for (i = 0; i < 9; i++)
-	{
-		fone[i] = entrada[j];
-		j++;
-	}
-	
-	telefone = (int) fone;
-	strcpy(novoContatinho->nome, nome);
-	novoContatinho->fone = telefone;
-	
-	if (root == NULL)
-	{
-		current = root = novoContatinho;
-	}
-	else
-	{
-		current = current->link = novoContatinho;
-	}	
-}
-
-void RemoverContatinho(contatinho **root_ref, char nome[9])
-{
-	
-    contatinho* temp = *root_ref, *prev; 
-  
-     
-    if (temp != NULL && strcmp(temp->nome, nome)) 
-    { 
-        *root_ref = temp->link;    
-        free(temp);               
-    } 
-  
+struct Pessoa{
+    char* nome;
+    char telefone[10];
     
-    while (temp != NULL && temp->nome != nome) 
-    { 
-        prev = temp; 
-        temp = temp->link; 
-    } 
-  
+}pessoa[MAX];
+
+void exibirMenu(){
+    printf("\n\tSelecione umas das opções a seguir:\n");
+    printf("\tI - Inserir novo contato\n"
+           "\tP - Pesquisar por um contato\n"
+           "\tR - Remover um contato com 'nome'.\n"
+           "\tA - Alterar um contato\n"
+           "\t0 - Sair\n\n");
+}
+
+char* alocarMemoria(int tamanho){
+    char* info = NULL;
+    info = (char*) malloc(sizeof(tamanho) * sizeof(char));
+
+    if(info == NULL){
+        printf("ERRO: impossível alocar a quantidade de memória requisitada!");
+        exit(1);
+    }
+    return info;
+}
+
+void cadastrarContato(int registro, char* nomeBuscado){
+    char dados[MAX];
+    strcpy(dados,nomeBuscado);
+    setbuf(stdin, NULL);
     
-    if (temp == NULL) return; 
-  
+    //Alocação e cópia de dados
+    pessoa[registro].nome = alocarMemoria(strlen(dados));
+    strcpy(pessoa[registro].nome, dados);
+
+    //printf("\t\tTelefone: "); //COMENTAR NO RUN.CODES
+    scanf("%s", pessoa[registro].telefone);
+    setbuf(stdin, NULL);
+}
+
+void exibirContato(int indice){
+    //printf("\tIndice encontrado: %d\n", indice); //COMENTAR NO RUN.CODES
+    printf("\tContatinho encontrado: telefone %s\n", pessoa[indice].telefone);
+}
+
+void removerContato(int indice){
+    int i;
+    //printf("\tIndice encontrado: %d\n", indice); //COMENTAR NO RUN.CODES
+    for(i = indice; i < MAX; i++){
+        pessoa[i] = pessoa[i+1];
+    }
+}
+
+int pesquisarContato(int qtdeContatos, char* nomeBuscado){
+    int i;
     
-    prev->link = temp->link; 
-  
-    free(temp); 
+    for(i = 0; i < qtdeContatos; i++){
+        if(strcmp(nomeBuscado, pessoa[i].nome) == 0)
+            return i;
+    }
+    return -1;
 }
 
-void PesquisarContatinho(char nome[10])
-{
-	contatinho *temp = malloc(sizeof(*temp));
-	temp->link = NULL;
-	if (root->link == NULL)
-	{
-		printf("Operacao invalida: contatinho nao encontrado \n");
-	}
-	else
-	{
-		temp->link = root->link;
-	}
-	
-	if(temp->link)
-	{
-		do
-		{
-			if(temp->nome == nome)
-			{
-				printf("Contatinho encontrado: telefone %d \n", temp->fone);
-				break;
-			}
-			else
-			{
-				temp = temp->link;
-			}
-		}
-		while(temp->link);
-	}
+void atualizarContato(int indice){
+    
+    char* nome;
+    char fone[16];
+    char dados[MAX];
+    setbuf(stdin, NULL);
+    
+    
+    //Alocação e cópia de dados
+    nome = alocarMemoria(strlen(dados));
+    strcpy(nome, dados);
+    //printf("\tTelefone: "); //COMENTAR NO RUN.CODES
+    scanf("%s", fone);
+    setbuf(stdin, NULL);
+    strcpy(pessoa[indice].telefone, fone);
+
+}
+char leitor(){
+    char opcao;
+    //printf("\n\tOpção escolhida: "); //COMENTAR NO RUN.CODES
+    scanf("%s", &opcao);
+    setbuf(stdin, NULL);
+    return opcao;
 }
 
-void AlterarContatinho(char entrada[21])
-{
-	
+int main(){
+    char nome[MAX];
+    int numeroRegistro = 0;
+    char opcaoEscolhida;
+    char I, P, R, A;
+    int indice;
+
+    do{
+        //exibirMenu();
+        opcaoEscolhida = leitor();
+        
+        switch(opcaoEscolhida){
+            case 'I': //INSERIR
+                //printf("\n\t\tNome: "); //COMENTAR NO RUN.CODES
+                scanf("%s", nome);
+                indice = pesquisarContato(numeroRegistro, nome);
+                
+                if(indice >= 0 && indice <= 99)
+                    printf("\n\tContatinho ja inserido\n");
+                else
+                    cadastrarContato(numeroRegistro++, nome);
+                break;
+                
+            case 'P': //PESQUISAR
+                //printf("\n\tNome: "); //COMENTAR NO RUN.CODES
+                scanf("%s", nome);
+                indice = pesquisarContato(numeroRegistro, nome);
+
+                if(indice >= 0 && indice <= 99)
+                    exibirContato(indice);
+                else
+                    printf("\n\tContatinho nao encontrado\n");
+                break;
+            
+            case 'R': //REMOVER
+                //printf("\n\tNome: "); //COMENTAR NO RUN.CODES
+                scanf("%s", nome);
+                indice = pesquisarContato(numeroRegistro--, nome);
+                
+                if(indice >= 0 && indice <= 99)
+                    removerContato(indice);
+                else
+                    printf("\n\tOperacao invalida: contatinho nao encontrado\n");
+                break;
+               
+            case 'A': //ALTERAR
+                //printf("\n\tNome: "); //COMENTAR NO RUN.CODES
+                scanf("%s", nome);
+                indice = pesquisarContato(numeroRegistro, nome);
+                
+                if(indice >= 0 && indice <= 99)
+                    atualizarContato(indice);
+                else
+                    printf("\n\tOperacao invalida: contatinho nao encontrado\n");
+                break;
+                
+            case '0': //SAIR
+                //printf("\n\tSaindo..."); //COMENTAR NO RUN.CODES
+                break;
+            default:
+                //printf("Opção inválida!\n"); //COMENTAR NO RUN.CODES
+                //exibirMenu();
+                opcaoEscolhida = leitor();
+        }
+
+    }while(opcaoEscolhida != '0');
 }
 
-int main(void)
-{
-	root = malloc(sizeof(struct contatinho));
-	root->link = malloc(sizeof(struct contatinho));
-	root = NULL;
-	root->link = NULL;
-	char entrada[21];
-	
-	while (entrada[0] != "0")
-	{	
-		gets(entrada);
-		
-		if (entrada[0] == "I")
-		{
-			//Inserir contato
-			if (root == NULL)
-			{
-				AdicionarContatinho(entrada);
-			}
-		}
-		else if (entrada[0] == "P")
-		{
-			//Pesquisar contato
-			char nome[9];
-			int j = 2;
-			int i = 0;
-			for (i = 0; i < 9; i++)
-			{
-				nome[i] = entrada[j];
-				j++;
-			}
-			PesquisarContatinho(nome);
-		}
-		else if (entrada[0] == "R")
-		{
-			//Remover contato
-		}
-		else if (entrada[0] == "A")
-		{
-			//Alterar contato
-		}
-		else if (entrada[0] == "0")
-		{
-			printf("Exit");
-		}
-	}
-
-	return 0;
-}
